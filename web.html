@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hand-drawn Sketch Recognition</title>
+  <style>
+    body {
+        font-family: 'Inter', sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 0;
+      color: #333;
+    }
+
+    header {
+      background-color: #111827;
+      color: white;
+      padding: 30px 20px;
+      text-align: center;
+    }
+
+    .project-title {
+      font-size: 2rem;
+      margin-bottom: 10px;
+    }
+
+    .course-code, .authors, .affiliation {
+      font-size: 1rem;
+      margin: 5px 0;
+    }
+
+    .links a {
+      color: #3b82f6;
+      text-decoration: none;
+      margin: 0 10px;
+    }
+
+    .links a:hover {
+      text-decoration: underline;
+    }
+
+    .section {
+      padding: 30px 20px;
+      background: white;
+      margin: 20px auto;
+      max-width: 1000px;
+      border-radius: 12px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    .section h2 {
+      border-bottom: 2px solid #e5e7eb;
+      padding-bottom: 10px;
+    }
+
+    .dataset-gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 15px;
+      margin-top: 15px;
+    }
+
+    .dataset-gallery img {
+      width: 100%;
+      border-radius: 8px;
+      object-fit: cover;
+      border: 1px solid #ddd;
+    }
+
+    .upload-section {
+      margin-top: 20px;
+    }
+
+    .upload-section input[type="file"] {
+      margin-top: 10px;
+    }
+
+    .pdf-link, .video {
+      margin-top: 15px;
+    }
+    .sketch-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 16px;
+  justify-items: center;
+  align-items: center;
+  padding: 16px;
+}
+
+.sketch-item {
+  text-align: center;
+}
+
+    iframe {
+      width: 100%;
+      height: 400px;
+      border: none;
+    }
+
+    .dataset-gallery img {
+  width: 100%;
+  border-radius: 8px;
+  object-fit: cover;
+  border: 1px solid #ddd;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
+}
+
+.dataset-gallery img:hover {
+  transform: scale(1.05);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+}
+
+.section {
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeInUp 0.6s forwards;
+}
+
+.section:nth-of-type(2) { animation-delay: 0.2s; }
+.section:nth-of-type(3) { animation-delay: 0.4s; }
+.section:nth-of-type(4) { animation-delay: 0.6s; }
+
+@keyframes fadeInUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Image upload preview transition */
+#preview {
+  transition: opacity 0.4s ease;
+  opacity: 0;
+}
+#preview.shown {
+  opacity: 1;
+}
+
+/* Lightbox overlay */
+#lightbox {
+  position: fixed;
+  display: none;
+  justify-content: center;
+  align-items: center;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  z-index: 999;
+}
+
+#lightbox img {
+  max-width: 90%;
+  max-height: 90%;
+  border-radius: 10px;
+}
+
+  </style>
+</head>
+<body>
+    <div id="lightbox" onclick="closeLightbox()">
+        <img id="lightbox-img" src="" alt="Preview">
+      </div>
+      
+
+  <header>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+
+    <div class="project-title">Hand-drawn Sketch Recognition</div>
+    <div class="course-code">CSL2050:Pattern Recognition and Machine Learning (PRML)</div>
+    <div class="authors">Jigyasa Tiwari(B23EE1029), Pragati Khandelwal(b23ee1054),  Pragati Rokade( b23cm1055), Vandita Gupta(b23cm1061)</div>
+    <div class="links">
+      <a href="Report.pdf" target="_blank">Report</a> |
+      <a href="https://github.com/jigyasaatiwari/Project-Handrawn-Sketch-Recognition" target="_blank">Code</a> |
+      <a href="https://cybertron.cg.tu-berlin.de/eitz/projects/classifysketch/" target="_blank" rel="noopener noreferrer">Dataset </a> |
+
+      <a href="MOM.pdf" target="_blank">MOM</a> |
+      <a href="" target="_blank">CodeDemo</a> |
+      <a href="Spotlight_Video" target="_blank">Spotlight_Video</a>
+    </div>
+  </header>
+
+  <section class="section">
+    <h2>About the Project</h2>
+    <p>
+      Hand-drawn sketch recognition is a challenging task due to the abstract and minimalistic nature of sketches compared to natural images. This project aims to classify sketches into predefined object categories using various machine learning techniques. The significance of this research lies in its applications in human-computer interaction and content-based image retrieval. We explore different traditional feature extraction techniques and compare their effectiveness in conjunction with machine learning models.
+    </p>
+  </section>
+
+  <section class="section">
+    <section class="section">
+        <h2>Sample Sketches from Dataset</h2>
+          
+        <div class="dataset-gallery">
+          <!-- Alarm Clock -->
+          <div>
+            <img src="samples/cloud.png" alt="">
+
+            <!-- <img src="samples/85.png" alt="Alarm Clock 2"> -->
+            <p style="text-align:center; margin-top:5px;">Cloud</p>
+            
+          </div>
+          <!-- <div>
+            <img src="samples/86.png" alt="Alarm Clock 3">
+            <p style="text-align:center; margin-top:5px;">Alarm Clock</p>
+          </div> -->
+      
+          <!-- Apple -->
+          <div>
+            <img src="samples/Duck.png" alt="Duck1">
+            <!-- <p style="text-align:center; margin-top:5px;">Apple</p> -->
+          <!-- </div>
+          <div> -->
+            <!-- <img src="samples/5765.png" alt="Duck 2"> -->
+            <p style="text-align:center; margin-top:5px;">Duck</p>
+          </div>
+          <!-- <div>
+            <img src="samples/5766.png" alt="Duck 3">
+            <p style="text-align:center; margin-top:5px;">Apple</p>
+          </div> -->
+          <div>
+            <img src="samples/Alarm_clock.png" alt="Alarm Clock">
+            <!-- <img src="samples/85.png" alt="Alarm Clock"> -->
+            <p style="text-align:center; margin-top:5px;">Alarm Clock</p>
+            
+          </div>
+
+          <div>
+            <img src="samples/5766.png" alt="">
+            <!-- <img src="samples/85.png" alt="Alarm Clock 2"> -->
+            <p style="text-align:center; margin-top:5px;">Duck</p>
+            
+          </div>
+
+          <div>
+            <img src="samples/alarm_clock_2.png" alt="cloud">
+            <!-- <img src="samples/5765.png" alt="cloud"> -->
+            <p style="text-align:center; margin-top:5px;">Cloud</p>
+            
+          </div>
+
+        </div>
+      </section>
+      
+    </div>
+  </section>
+
+  <section class="section">
+    <section class="section">
+        <h2> After preprocessing and feature extraction</h2>
+          
+        <div class="dataset-gallery">
+          <!-- Alarm Clock -->
+          <div>
+            <img src="samples/A_house.png" alt="">
+            <p style="text-align:center; margin-top:5px;">House</p>
+            
+          </div>
+          <!-- <div>
+            <img src="samples/86.png" alt="Alarm Clock 3">
+            <p style="text-align:center; margin-top:5px;">Alarm Clock</p>
+          </div> -->
+      
+          <!-- Apple -->
+          <div>
+            <img src="samples/A_Human-skeleton.png" alt="">
+            <!-- <p style="text-align:center; margin-top:5px;">Apple</p> -->
+          <!-- </div>
+          <div> -->
+            <p style="text-align:center; margin-top:5px;">Human-skeleton</p>
+          </div>
+          <!-- <div>
+            <img src="samples/5766.png" alt="Duck 3">
+            <p style="text-align:center; margin-top:5px;">Apple</p>
+          </div> -->
+          <div>
+            <img src="samples/A_Nose.png" alt="">
+            <p style="text-align:center; margin-top:5px;">Nose</p>
+            
+          </div>
+
+          <div>
+            <img src="samples/A_Radio.png" alt="">
+
+            <p style="text-align:center; margin-top:5px;">Radio</p>
+            
+          </div>
+
+          <div>
+            <img src="samples/A_Bee.png" alt="">
+
+            <p style="text-align:center; margin-top:5px;">Bee</p>
+            
+          </div>
+
+        </div>
+      </section>
+      
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>t-SNE Visualization</h2>
+    <div>
+      <div class="screenshot-section">
+        <img src="samples/t-SNE.jpg" alt="t-SNE visualization" 
+             style="max-width:600px; width:100%; border:1px solid #ccc; border-radius:8px;" />
+      </div>
+    </div>
+  </section>
+  
+    
+  
+
+
+    <!-- <div>
+      <img src="samples/" alt="">
+
+      <p style="text-align:center; margin-top:5px;">CodeDemo</p>
+      
+    </div>
+    <div>
+      <img src="samples/" alt="">
+
+      <p style="text-align:center; margin-top:5px;">CodeDemo</p>
+      
+    </div> -->
+
+    <!-- <div>
+      <img src="samples/" alt="">
+
+      <p style="text-align:center; margin-top:5px;">CodeDemo</p>
+      
+    </div> -->
+
+    <!-- <div>
+      <img src="samples/" alt="">
+
+      <p style="text-align:center; margin-top:5px;">CodeDemo</p>
+      
+    </div> -->
+  <!-- </div> -->
+<!-- </section>
+    
+    
+      <img src="samples/t-SNE.jpg" alt="Screenshot of Streamline Website" style="max-width:300px; border:1px solid #ccc; border-radius:8px;" />
+    </div>
+  </section> -->
+
+  <!-- <section class="section">
+    <h2>Web Demo</h2>
+    <div class="upload-section">
+      <input type="file" accept="image/*" onchange="previewImage(event)">
+      <br><br>
+      <img id="preview" src="#" alt="Preview will appear here" style="display:none; max-width:300px; border:1px solid #ccc; border-radius:8px;"/>
+    </div>
+  </section> -->
+
+  <section class="section">
+    <h2>WebDemo</h2>
+    <div class="streamline-section">
+      <p>Check out the WebDemo:
+        <a href="https://your-streamline-link.com" target="_blank">Streamline</a>
+      </p>
+      <br>
+      <img src="path-to-your-screenshot.jpg" alt="Screenshot of Streamline Website" style="max-width:300px; border:1px solid #ccc; border-radius:8px;" />
+    </div>
+  </section>
+  
+
+  <section class="section">
+    <h2>Minutes of Meeting (MoM)</h2>
+    <div class="pdf-link">
+      <a href="mom.pdf" target="_blank">Download MoM PDF</a>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>Project Video Demo</h2>
+    <div class="video">
+      <iframe src="https://www.youtube.com/embed/YOUR_VIDEO_ID" allowfullscreen></iframe>
+    </div>
+  </section>
+
+  <script>
+    function previewImage(event) {
+      const preview = document.getElementById('preview');
+      preview.src = URL.createObjectURL(event.target.files[0]);
+      preview.style.display = 'block';
+    }
+
+    
+  </script>
+
+<script>
+    function previewImage(event) {
+      const preview = document.getElementById('preview');
+      preview.src = URL.createObjectURL(event.target.files[0]);
+      preview.style.display = 'block';
+      setTimeout(() => preview.classList.add('shown'), 10);
+    }
+  
+    // Lightbox logic
+    const galleryImgs = document.querySelectorAll('.dataset-gallery img');
+    const lightbox = document.getElementById('lightbox');
+    const lightboxImg = document.getElementById('lightbox-img');
+  
+    galleryImgs.forEach(img => {
+      img.addEventListener('click', () => {
+        lightbox.style.display = 'flex';
+        lightboxImg.src = img.src;
+      });
+    });
+  
+    function closeLightbox() {
+      lightbox.style.display = 'none';
+    }
+  </script>
+  
+
+</body>
+</html>
+
